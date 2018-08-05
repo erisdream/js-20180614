@@ -4,44 +4,43 @@ import Component from '../../component.js';
 
 export default class PhoneViewer extends Component {
 
+  constructor ({ element }) {
+    super({ element });
+
+    this.on('click', '[data-element="button-back"]', () => {
+      this._trigger('back');
+    });
+
+    this.on('click', '[data-element="button-add"]', () => {
+      this._trigger('add', this._phone.id);
+    });
+  }
+
+
   showPhone(phone) {
     this._phone = phone;
-    this._render();
+    this._render(phone);
 
     super.show();
   }
 
-  _render() {
+  _render(phone) {
     this._element.innerHTML = `
-      <img class="phone" src="${ this._phone.images[0] }">
-
-      <button>Back</button>
-      <button>Add to basket</button>
+      <img class="phone" src="${ phone.images[0] }">
+      <button data-element="button-back">Back</button>
+      <button data-element="button-add">Add to basket</button>
   
   
-      <h1>Motorola XOOM™ with Wi-Fi</h1>
-  
-      <p>${ this._phone.description }</p>
+      <h1>${ phone.name }</h1>
+      <p>${ phone.description }</p>  
   
       <ul class="phone-thumbs">
-        <li>
-          <img src="${ this._phone.images[0] }">
-        </li>
-        <li>
-          <img src="${ this._phone.images[1] }">
-        </li>
-        <li>
-          <img src="${ this._phone.images[2] }">
-        </li>
-        <li>
-          <img src="${ this._phone.images[3] }">
-        </li>
-        <li>
-          <img src="${ this._phone.images[4] }">
-        </li>
-        <li>
-          <img src="${ this._phone.images[5] }">
-        </li>
+        ${ phone.images.map(image => `
+          <li>
+            <img src="${ image }">
+          </li>
+          
+        `).join('')}
       </ul>
 
 <ul class="specs">
