@@ -1,15 +1,28 @@
-'use strict'
+'use strict';
 
-import HttpService from '../../common/services/http-service.js';
+import HttpService from '../../common/service/http-service.js';
 
 const PhoneService = {
-  getAll(callback) {
-    HttpService.sendRequest('phones.json', callback)
-  },
+    getAll({query = '', orderField = ''} = {}) {
+        return HttpService.sendRequest('phones.json')
+            .then(phones => {
+                let filteredPhones = this._filter(phones, query);
+                let sortedPhones = this._sort(filteredPhones, orderField);
 
-  get(phoneId, callback) {
-    HttpService.sendRequest(`phones/${phoneId}.json`, callback)
-  },
+                return sortedPhones;
+            });
+    },
+
+    get(phoneId) {
+        return HttpService.sendRequest(`phones/${phoneId}.json`);
+    },
+
+    _filter(phones, query) {
+        const queryLowerCased = query.toLowerCase();
+        return phones.filter(phone => phone.name.toLowerCase().includes(queryLowerCased));
+    },
+
+    _sort(phones, orderField) {
+        return phones.sort((a, b) => a[orderField] > b[orderField] ? 1 : -1);
+    }
 };
-
-export default PhoneService;

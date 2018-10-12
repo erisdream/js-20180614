@@ -1,24 +1,35 @@
-export default class PhonesFilter {
-  constructor({ element }) {
-    this._element = element;
+'use strict';
+import Component from '../../component.js';
 
-    this._render();
-  }
+export default class PhonesFilter extends Component {
+    constructor({element}) {
+        super({element});
+        this._render();
 
-  _render() {
-    this._element.innerHTML = `
-      <p>
-        Search:
-        <input>
-      </p>
+        window.handlePhonesSort = (event) => {
+            this._trigger('sort', event.target.value);
+        };
 
-      <p>
-        Sort by:
-        <select>
-          <option value="name">Alphabetical</option>
-          <option value="age">Newest</option>
-        </select>
-      </p>
-    `;
-  }
+        window.handlePhonesSearch = (event) => {
+            this._trigger('search', event.target.value);
+        };
+    }
+
+    _render() {
+        this._element.innerHTML = `
+            <p>
+                Search:
+                <input oninput="window.handlePhonesSearch(event)"
+                       type="text">
+            </p>
+            
+            <p>
+                Sort by:
+                <select onchange="window.handlePhonesSort(event)">
+                    <option value="name">Alphabetical</option>
+                    <option value="age">Newest</option>
+                </select>
+            </p>
+        `;
+    }
 }
